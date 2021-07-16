@@ -1,169 +1,171 @@
-<!--
-*** Thanks for checking out this README Template. If you have a suggestion that would
-*** make this better, please fork the repo and create a pull request or simply open
-*** an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
-***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** github_username, repo_name, twitter_handle, email
--->
+## Archtecture
+
+A arquitetura principal é baseada em MicroApps, onde cada parte é um "Template de Pacote" diferente.
+
+## Clean Architecture
+
+Um objetivo importante da Clean Architecture é fornecer aos desenvolvedores uma maneira de organizar o código de forma que encapsule a lógica de negócios, mas mantenha-o separado do mecanismo de entrega.
+
+### Vantagens
+
+Utilizar uma arquitetura em camadas são muitas, porém podemos pontuar algumas que fazem sentido ao projeto:
+
+- Testável As regras de negócios podem ser testadas sem a interface do usuário, banco de dados, servidor ou qualquer outro elemento externo,
+Independente da interface do usuário. A interface do usuário pode mudar facilmente, sem alterar o restante do sistema.
+
+- Independente de banco de dados. Você pode trocar o Oracle ou SQL Server, por Mongo, BigTable, CouchDB ou qualquer outro. Suas regras de negócios não estão vinculadas ao banco de dados.
+
+- Independente de qualquer agente externo. Na verdade, suas regras de negócios simplesmente não sabem nada sobre o mundo exterior, não estão ligadas a nenhum Framework.
+
+A separação de camadas poupará o desenvolvedor de muitos problemas futuros com a manutenção do software, a regra de dependência bem aplicada deixará seu sistema completamente testável. Quando um framework, um banco de dados, ou uma API se tornar obsoleta a substituição de uma camada não será uma dor de cabeça, além de garantir a integridade do core do projeto. Para mais detalhes de cada camada da Clean Architecture podemos ver no [blog do Uncle Bob.](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+## Getting Started
+
+### Flutter modular
+Para estrutura de modulos e injeção de dependencias usamos o flutter_modular
+Para mais detalhes
+[flutter_modular](https://pub.dev/packages/flutter_modular)
 
 
+### Gerencia de estado
 
+para gerencia de estado, estamos usando [MobX](https://pub.dev/packages/mobx)
 
+Adiciona as possiveis anotações seu código MobX com:
+`@observable`, `@computed`, `@action`
+tornando-o super simples de usar o MobX.
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+as classes store são abstratas e usam o mixin Store. Ao executar o build_runner, ele gerará automaticamente o arquivo * .g.dart que deve ser importado em seu arquivo.
 
+```dart
+import 'package:mobx/mobx.dart';
 
+// Include generated file
+part 'todos.g.dart';
 
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="https://develogo.com/nubank-clone/nubank-logo.png" alt="Logo" width="140" height="80">
-  </a>
+// This is the class used by rest of your codebase
+class Todo = TodoBase with _$Todo;
 
-  <h3 align="center">Nubank Clone</h3>
+// The store-class
+abstract class TodoBase with Store {
+  TodoBase(this.description);
 
-  <p align="center">
-    Clone do aplicativo do Nubank
-    <br />
-    <a href="https://github.com/develogo/nubank_clone"><strongExplore »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/develogo/nubank_clone">Demo Apk</a>
-    ·
-    <a href="https://github.com/develogo/nubank_clone">Report Bug</a>
-    ·
-    <a href="https://github.com/develogo/nubank_clone">Solicitar Função</a>
-  </p>
-</p>
+  @observable
+  String description = '';
 
-
-
-<!-- TABLE OF CONTENTS -->
-## Índice
-
-* [Sobre o Projeto](#sobre-o-projeto)
-  * [Feito Com](#feito-com)
-* [Como Começar](#como-começar)
-  * [Pré-Requisitos](#pré-requisitos)
-  * [Instalação](#instalação)
-* [Uso](#uso)
-* [Contribuição](#contributing)
-* [Contato](#contact)
-
-
-
-<!-- ABOUT THE PROJECT -->
-## Sobre o Projeto
-
-<p float="left">
-  <img src="https://develogo.com/nubank-clone/demo.gif" width="200"/>
-  <img src="https://develogo.com/nubank-clone/0.png" width="200" />
-  <img src="https://develogo.com/nubank-clone/1.png" width="200" /> 
-  <img src="https://develogo.com/nubank-clone/2.png" width="200" />
-  <img src="https://develogo.com/nubank-clone/3.png" width="200" />
-</p>
-
-***[ATENÇÃO] Este projeto foi criado com intuito de aprendizado da tecnologia Flutter e não deve ser usado para quaisquer outros fins.***<br />
-A aplicação tenta reproduzir o layout do aplicativo original. Para mudar os valores do aplicativo leia [aqui](#uso).
-Qualquer dúvida sinta-se a vontade para perguntar, ficarei feliz em ajudar.
-
-
-### Feito Com
-
-* [Flutter](https://flutter.dev/)
-* [Flutter Modular](https://github.com/Flutterando/modular)
-* [Mobx](https://pub.dev/packages/mobx)
-* [Slidy](https://github.com/Flutterando/slidy)
-
-
-
-<!-- GETTING STARTED -->
-## Como Começar
-
-Aqui estara as instruçoes para executar com sucesso em seu dispositivo
-
-### Pré-Requisitos
-
-* Flutter
-* Slidy(Opcional)
-
-
-### Instalação
-
-1. Clone este repositório
-```sh
-git clone https://github.com/develogo/nubank_clone.git
-```
-2. Baixe as dependências
-```sh
-flutter pub get
-```
-3. Rode :D
-```sh
-flutter run
+  @observable
+  bool done = false;
+}
 ```
 
+Ao executar o comando abaixo:
 
+``` terminal
+$> cd $YOUR_PROJECT_DIR
 
-<!-- USAGE EXAMPLES -->
-## Uso
+// ele vai atualizar todos seus arquivos do mobx e gerar os arquivos .g.dart
+$> flutter packages pub run build_runner build
 
-Para alterar os valores do APP você deve acessar `/lib/constants/const.dart`. Lá encontram-se os valores de:  Nome, Saldo, Crédito, Fatura e Porquinho.
+// ele vai ficar observando seus arquivos do mobx e automaticamente ira gerar os arquivos .g.dart
+$> flutter packages pub run build_runner watch
+```
 
+Comando opcional: Assume que as saídas conflitantes no pacote de usuários são de compilações anteriores e pula o prompt do usuário que normalmente seria fornecido:
 
-<!-- CONTRIBUTING -->
-## Contribuição
+``` terminal
+$> flutter packages pub run build_runner build --delete-conflicting-outputs
+```
 
-As contribuições são o que torna a comunidade de código aberto um lugar incrível para aprender, inspirar e criar. Quaisquer contribuições que você fizer são **bem-vindas**
+Ou
 
-1. Fork o Projeto
-2. Crie sua Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add uma AmazingFeature'`)
-4. Push para sua Branch (`git push origin feature/AmazingFeature`)
-5. Faça a Pull Request
+``` terminal
+$> flutter packages pub run build_runner watch --delete-conflicting-outputs
+```
 
+## Estrutura de pastas
 
-<!-- CONTACT -->
-## Contato
+Assumindo que o aplicativo crescerá, é essencial manter uma estrutura escalonável para suportar tal crescimento, a fim de facilitar a localização dos arquivos e possíveis alterações adicionais na estrutura de pastas.
 
-Felipe Andrade - [Instagram](https://instagram.com/lipe.py) - felipe@develogo.com
+Observação! O [+] indica que a pasta possui arquivos adicionais.
 
-Link do projeto: [https://github.com/develogo/nubank_clone](https://github.com/develogo/nubank_clone)
+``` tex
+|-- lib
+    |-- app
+        |-- main.dart
+        |-- core
+            |--[+] extensions
+            |--[+] shared
+            |--[+] utils
+        |-- modules
+            |-- home
+                |--[+] data
+                    |--[+] datasources
+                    |--[+] repositories
+                |--[+] domain
+                    |--[+] entities
+                    |--[+] failures
+                    |--[+] repositories
+                    |--[+] usecases
+                |--[+] external
+                    |--[+] datasource
+                        |--[+] api
+                |--[+] presentation
+                    |--[+] widgets
+                    |--[+] pages
 
+```
 
+##### core
 
+O `core` é onde devem ficar os dados que serão persistidos na aplicação, onde consumirão bibliotecas externas, arquivos comuns entre a aplicação, interceptores de requisições e serviços com as negociações para atender as telas.
 
+``` tex
+ |-- core
+    |--[+] shared
+    |--[+] utils
+```
 
+##### modules
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=flat-square
-[contributors-url]: https://github.com/develogo/nubank_clone/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=flat-square
-[forks-url]: https://github.com/develogo/nubank_clone/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=flat-square
-[stars-url]: https://github.com/develogo/nubank_clone/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=flat-square
-[issues-url]: https://github.com/develogo/nubank_clone/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=flat-square
-[license-url]: https://github.com/github_username/repo/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/develogo
+Para cada novo recusos dentro do projeto deve ser criado uma nova `modules` dentro da pasta modules, pois para cada nova feature deve conter toda a logica referente a nova `feature` assim se pode manter um projeto fracamente acoplado e testável.
+
+``` tex
+  |--[+] modules
+      |--[+] home
+```
+
+##### data
+
+Esta camada suporta a camada de Domínio implementando suas interfaces. Para fazer isso, ele deve adaptar os dados externos para que cumpram os contratos de domínio.
+
+``` tex
+    |-- home
+        |--[+] data
+```
+
+##### domain
+
+A camada de Domínio conterá nossas regras de negócios principais (entidade) e regras de negócios específicas do aplicativo (casos de uso).
+
+``` tex
+    |-- home
+        |--[+] domain
+```
+
+##### external
+
+Aqui implementamos os acessos externos que dependem de um hardware, pacote ou acesso altamente específico.
+
+``` tex
+    |-- home
+        |--[+] external
+```
+
+##### presentation
+
+A camada Presenter é responsável por declarar o I/O e as interações da aplicação.
+
+``` tex
+    |-- home
+        |--[+] presentation
+```
